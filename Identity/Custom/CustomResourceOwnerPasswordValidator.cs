@@ -1,7 +1,7 @@
 ﻿using IdentityServer4.Validation;
 using IdentityModel;
 using System.Threading.Tasks;
-using Identity.Data;
+using Identity.Data.Repositories;
 
 namespace Identity.Custom
 {

@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Identity.Data
+namespace Identity.Data.Stores
 {
     public class UserStore : IUserStore<User>
     {

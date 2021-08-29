@@ -1,5 +1,5 @@
 ﻿using Identity.Custom;
-using Identity.Data;
+using Identity.Data.Repositories;
 using Identity.Extensions;
 using Identity.ViewModel.Account;
 using IdentityModel;

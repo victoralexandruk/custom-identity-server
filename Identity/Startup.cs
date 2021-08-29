@@ -1,16 +1,10 @@
-using Identity.Custom;
-using Identity.Data;
-using IdentityServer4.Services;
-using IdentityServer4.Validation;
+using Identity.Data.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
-using System;
-using System.IO;
 
 namespace Identity
 {
@@ -38,11 +32,8 @@ namespace Identity
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseSuccessEvents = true;
             })
-                .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryApiResources(Config.Apis)
-                .AddInMemoryIdentityResources(Config.IdentityResources)
-                //.AddResourceStore<ResourceStore>()
-                .AddClientStore<ClientStore>()
+                .AddCustomResourceStore()
+                .AddCustomClientStore()
                 .AddCustomUserStore();
 
 #if DEBUG

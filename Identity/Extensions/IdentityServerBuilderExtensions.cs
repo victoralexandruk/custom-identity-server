@@ -1,5 +1,6 @@
 ﻿using Identity.Custom;
-using Identity.Data;
+using Identity.Data.Repositories;
+using Identity.Data.Stores;
 using Identity.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Validation;
@@ -19,11 +20,25 @@ namespace Microsoft.Extensions.DependencyInjection
                 opt.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2;
             });
             builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-            builder.Services.AddSingleton<UserRepository>();
+            builder.Services.AddScoped<UserRepository>();
             //builder.AddAspNetIdentity<User>();
             builder.AddProfileService<CustomProfileService>();
             builder.AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>();
 
+            return builder;
+        }
+
+        public static IIdentityServerBuilder AddCustomClientStore(this IIdentityServerBuilder builder)
+        {
+            builder.Services.AddScoped<ClientRepository>();
+            builder.AddClientStore<ClientStore>();
+            return builder;
+        }
+
+        public static IIdentityServerBuilder AddCustomResourceStore(this IIdentityServerBuilder builder)
+        {
+            builder.Services.AddScoped<ResourceRepository>();
+            builder.AddResourceStore<ResourceStore>();
             return builder;
         }
 

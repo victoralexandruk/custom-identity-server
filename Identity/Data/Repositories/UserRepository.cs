@@ -4,14 +4,14 @@ using System;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Identity.Data
+namespace Identity.Data.Repositories
 {
     public class UserRepository
     {
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        // Replce this with your user persistence. 
-        private readonly List<User> _users = new List<User>();
+        // Replce this with your User persistence.
+        private readonly List<User> _users = MemoryData.Users;
 
         public UserRepository(IPasswordHasher<User> passwordHasher)
         {
