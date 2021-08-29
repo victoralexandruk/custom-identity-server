@@ -1,0 +1,31 @@
+﻿@using System.Security.Claims
+@using Newtonsoft.Json.Linq
+@{
+    ViewData["Title"] = "Home Page";
+
+    var claimsJson = new Dictionary<string, string>();
+    ClaimsPrincipal principal = (ClaimsPrincipal)User;
+    if (null != principal)
+    {
+        foreach (Claim claim in principal.Claims)
+        {
+            claimsJson[claim.Type] = claim.Value;
+        }
+    }
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<div>
+    <h4>Claims</h4>
+    <pre id="claims" class="p-4 bg-dark text-white"></pre>
+</div>
+
+@section scripts {
+    <script>
+        var claims = @Json.Serialize(claimsJson);
+        document.querySelector('#claims').innerText = JSON.stringify(claims, null, 2);
+    </script>
+}
