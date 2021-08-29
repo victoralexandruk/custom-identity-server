@@ -1,10 +1,12 @@
-using Identity.Data.Stores;
+using Identity.Data;
+using Identity.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 
 namespace Identity
 {
@@ -120,6 +122,9 @@ namespace Identity
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // this will do the initial DB population
+            InitializeDatabase(app);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -137,7 +142,11 @@ namespace Identity
             app.UseCors("api");
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes = true
+            });
+            app.UseFileServer();
 
             app.UseRouting();
             app.UseIdentityServer();
@@ -147,6 +156,23 @@ namespace Identity
             {
                 endpoints.MapDefaultControllerRoute();
             });
+        }
+
+        private void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var userRepository = serviceScope.ServiceProvider.GetRequiredService<UserRepository>();
+                foreach (var user in Config.Users)
+                {
+                    if (userRepository.FindByUsername(user.UserName) == null)
+                        userRepository.Create(user, user.Password);
+                }
+
+                MemoryData.Clients = Config.Clients.ToList();
+                MemoryData.ApiScopes = Config.ApiScopes.ToList();
+                MemoryData.Apis = Config.Apis.ToList();
+            }
         }
     }
 }

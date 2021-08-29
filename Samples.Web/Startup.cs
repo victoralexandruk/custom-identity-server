@@ -53,8 +53,8 @@ namespace Samples.Web
                     options.Authority = "https://localhost:5001";
                     options.RequireHttpsMetadata = false;
 
-                    options.ClientId = "client";
-                    options.ClientSecret = "secret";
+                    options.ClientId = "demo";
+                    options.ClientSecret = "demo";
 
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;

@@ -16,47 +16,12 @@ namespace Identity.Data.Repositories
         public UserRepository(IPasswordHasher<User> passwordHasher)
         {
             _passwordHasher = passwordHasher;
-            SeedData();
-        }
-
-        private void SeedData()
-        {
-            // some dummy data.
-            Create(new User
-            {
-                UserName = "admin",
-                FullName = "Admin User",
-                Email = "admin@localhost.local",
-                Roles = new List<IdentityUserRole<string>> {
-                    new IdentityUserRole<string>
-                    {
-                        RoleId = "identity.admin"
-                    },
-                    new IdentityUserRole<string>
-                    {
-                        RoleId = "identity.user"
-                    }
-                },
-                Active = true
-            }, "admin");
-            Create(new User
-            {
-                UserName = "demo",
-                FullName = "Demo User",
-                Email = "demo@localhost.local",
-                Roles = new List<IdentityUserRole<string>> {
-                    new IdentityUserRole<string>
-                    {
-                        RoleId = "identity.user"
-                    }
-                },
-                Active = true
-            }, "demo");
         }
 
         public void Create(User user, string password)
         {
             user.Id = Guid.NewGuid().ToString();
+            user.Active = true;
             _users.Add(user);
             user.Roles.ToList().ForEach(role => role.UserId = user.Id);
             UpdatePassword(user, password);
@@ -92,6 +57,11 @@ namespace Identity.Data.Repositories
         public User FindByUsername(string username)
         {
             return _users.FirstOrDefault(x => x.UserName.Equals(username, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            return _users;
         }
     }
 }

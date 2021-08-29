@@ -8,11 +8,6 @@ namespace Identity.Models
 {
     public class CustomClient : Client
     {
-        //public string ClientId { get; set; }
-        //public string ClientName { get; set; }
-        //public string LogoUri { get; set; }
-        //public string FrontChannelLogoutUri { get; set; }
-
         public Secret ClientSecret { get; set; }
 
         public ICollection<string> AllowedUris { get; set; } = new List<string>();
@@ -21,22 +16,22 @@ namespace Identity.Models
         {
             var identityClient = new Client
             {
-                ClientId = ClientId,
-                ClientName = ClientName,
-                LogoUri = LogoUri,
+                ClientId = this.ClientId,
+                ClientName = this.ClientName,
+                LogoUri = this.LogoUri,
                 AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
                 ClientSecrets =
                 {
-                    ClientSecret
+                    this.ClientSecret
                 },
 
                 // where to redirect to after login
-                RedirectUris = AllowedUris.SelectMany(x => new string[] { x, $"{x}/signin-oidc" }).ToList(),
+                RedirectUris = this.AllowedUris.SelectMany(x => new string[] { x, $"{x}/signin-oidc" }).ToList(),
 
                 // where to redirect to after logout
-                PostLogoutRedirectUris = AllowedUris.SelectMany(x => new string[] { x, $"{x}/signout-callback-oidc" }).ToList(),
+                PostLogoutRedirectUris = this.AllowedUris.SelectMany(x => new string[] { x, $"{x}/signout-callback-oidc" }).ToList(),
 
-                AllowedCorsOrigins = AllowedUris,
+                AllowedCorsOrigins = this.AllowedUris,
                 AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
@@ -44,6 +39,7 @@ namespace Identity.Models
                     CustomScopes.CustomIdentityApi
                 },
 
+                RequireClientSecret = this.RequireClientSecret,
                 AllowOfflineAccess = true,
                 AllowAccessTokensViaBrowser = true,
                 RequirePkce = false,
