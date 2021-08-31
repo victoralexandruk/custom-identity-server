@@ -234,13 +234,14 @@ namespace IdentityServerHost.Quickstart.UI
         /*****************************************/
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
+            LoginViewModel vm;
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
             {
                 var local = context.IdP == IdentityServer4.IdentityServerConstants.LocalIdentityProvider;
 
                 // this is meant to short circuit the UI and only trigger the one external IdP
-                var vm = new LoginViewModel
+                vm = new LoginViewModel
                 {
                     EnableLocalLogin = local,
                     ReturnUrl = returnUrl,
@@ -265,13 +266,24 @@ namespace IdentityServerHost.Quickstart.UI
                     AuthenticationScheme = x.Name
                 }).ToList();
 
-            var allowLocal = true;
+            vm = new LoginViewModel
+            {
+                ClientName = "Local Account",
+                AllowRememberLogin = AccountOptions.AllowRememberLogin,
+                EnableLocalLogin = AccountOptions.AllowLocalLogin,
+                ReturnUrl = returnUrl,
+                Username = context?.LoginHint,
+                ModelErrors = ModelState.Values.SelectMany(v => v.Errors)
+            };
+
             if (context?.Client.ClientId != null)
             {
                 var client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
                 if (client != null)
                 {
-                    allowLocal = client.EnableLocalLogin;
+                    vm.EnableLocalLogin = client.EnableLocalLogin && AccountOptions.AllowLocalLogin;
+                    vm.ClientName = client.ClientName;
+                    vm.LogoUri = client.LogoUri;
 
                     if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Any())
                     {
@@ -280,15 +292,9 @@ namespace IdentityServerHost.Quickstart.UI
                 }
             }
 
-            return new LoginViewModel
-            {
-                AllowRememberLogin = AccountOptions.AllowRememberLogin,
-                EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
-                ReturnUrl = returnUrl,
-                Username = context?.LoginHint,
-                ExternalProviders = providers.ToArray(),
-                ModelErrors = ModelState.Values.SelectMany(v => v.Errors)
-            };
+            vm.ExternalProviders = providers.ToArray();
+
+            return vm;
         }
 
         private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)

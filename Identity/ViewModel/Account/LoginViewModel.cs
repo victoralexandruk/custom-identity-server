@@ -17,5 +17,9 @@ namespace Identity.ViewModel.Account
         public string ExternalLoginScheme => IsExternalLoginOnly ? ExternalProviders?.SingleOrDefault()?.AuthenticationScheme : null;
 
         public IEnumerable<ModelError> ModelErrors { get; set; } = Enumerable.Empty<ModelError>();
+
+        public string ClientName { get; set; } = "";
+
+        public string LogoUri { get; set; } = "";
     }
 }

@@ -24,6 +24,10 @@
               <td><input type="text" v-model="user.fullName" class="form-control form-control-sm" required /></td>
             </tr>
             <tr>
+              <th>{{$localizer('Email')}}</th>
+              <td><input type="text" v-model="user.email" class="form-control form-control-sm" /></td>
+            </tr>
+            <tr>
               <th>{{$localizer('Active')}}</th>
               <td><i class="h4" :class="{'icon-toggle-on text-success': user.active, 'icon-toggle-off text-muted': !user.active}" @click="user.active = !user.active"></i></td>
             </tr>
@@ -57,6 +61,7 @@ module.exports = {
       this.user = {
         userName: '',
         fullName: '',
+        email: '',
         active: true
       };
     } else {
