@@ -3,34 +3,46 @@ using System.Linq;
 using System;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
+using Dapper;
 
 namespace Identity.Data.Repositories
 {
-    public class UserRepository
+    public class UserRepository : BaseRepository
     {
         private readonly IPasswordHasher<User> _passwordHasher;
-
-        // Replce this with your User persistence.
-        private readonly List<User> _users = MemoryData.Users;
 
         public UserRepository(IPasswordHasher<User> passwordHasher)
         {
             _passwordHasher = passwordHasher;
         }
 
-        public void Create(User user, string password)
+        public void Save(User user)
         {
-            user.Id = Guid.NewGuid().ToString();
-            user.Active = true;
-            _users.Add(user);
-            user.Roles.ToList().ForEach(role => role.UserId = user.Id);
-            UpdatePassword(user, password);
+            if (string.IsNullOrEmpty(user.Id))
+                user.Id = Guid.NewGuid().ToString();
+
+            var old = FindBySubjectId(user.Id);
+            if (old == null)
+            {
+                user.Active = true;
+                InsertSql("User", "Id, UserName, FullName, Email, Active", user);
+            }
+            else
+            {
+                UpdateSql("User", "UserName, FullName, Email, Active", user, "Id = @Id");
+            }
+
+            user.Roles?.ToList().ForEach(role => role.UserId = user.Id);
+            
+            if (!string.IsNullOrWhiteSpace(user.Password))
+                UpdatePassword(user, user.Password);
         }
 
         public void UpdatePassword(User user, string password)
         {
             user.PasswordHash = _passwordHasher.HashPassword(user, password);
             user.SecurityStamp = Guid.NewGuid().ToString();
+            UpdateSql("User", "PasswordHash, SecurityStamp", user, "Id = @Id");
         }
 
         public bool ValidateCredentials(string username, string password)
@@ -46,22 +58,34 @@ namespace Identity.Data.Repositories
 
         public User FindBySubjectId(string subjectId)
         {
-            return _users.FirstOrDefault(x => x.SubjectId == subjectId);
+            using (var db = GetConn())
+            {
+                return db.QueryFirstOrDefault<User>("SELECT * FROM User WHERE Id = @subjectId", new { subjectId });
+            }
         }
 
         public User FindByExternalProvider(string provider, string userId)
         {
-            return _users.FirstOrDefault(x => x.Id == userId);
+            using (var db = GetConn())
+            {
+                return db.QueryFirstOrDefault<User>("SELECT * FROM User WHERE Id = @userId", new { userId });
+            }
         }
 
         public User FindByUsername(string username)
         {
-            return _users.FirstOrDefault(x => x.UserName.Equals(username, StringComparison.OrdinalIgnoreCase));
+            using (var db = GetConn())
+            {
+                return db.QueryFirstOrDefault<User>("SELECT * FROM User WHERE Username = @username", new { username });
+            }
         }
 
         public IEnumerable<User> GetAll()
         {
-            return _users;
+            using (var db = GetConn())
+            {
+                return db.Query<User>("SELECT * FROM User");
+            }
         }
     }
 }

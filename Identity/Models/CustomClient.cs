@@ -1,6 +1,7 @@
 ﻿using Identity.Custom.Constants;
 using IdentityServer4;
 using IdentityServer4.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +9,9 @@ namespace Identity.Models
 {
     public class CustomClient : Client
     {
-        public Secret ClientSecret { get; set; }
+        public new string ClientId { get; set; } = Guid.NewGuid().ToString();
+
+        public string ClientSecret { get; set; } = Guid.NewGuid().ToString().Sha256();
 
         public ICollection<string> AllowedUris { get; set; } = new List<string>();
 
@@ -22,7 +25,7 @@ namespace Identity.Models
                 AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
                 ClientSecrets =
                 {
-                    this.ClientSecret
+                    new Secret(this.ClientSecret)
                 },
 
                 // where to redirect to after login

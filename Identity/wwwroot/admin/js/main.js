@@ -3,8 +3,15 @@ const store = {
   localizerStrings: {}
 };
 
+httpVueLoader.httpRequest = function (url) {
+	const version = '20210829.02';
+	return new Promise(function(resolve, reject) {
+		$.get(url + '?v=' + version).done(resolve).fail(reject);
+	});
+};
+
 // Create an instance of Notyf
-var notyf = new Notyf({
+const notyf = new Notyf({
   position: {
     x: 'right',
     y: 'top'
@@ -12,13 +19,7 @@ var notyf = new Notyf({
   dismissible: true
 });
 
-httpVueLoader.httpRequest = function (url) {
-	const version = '20210829.00';
-	return new Promise(function(resolve, reject) {
-		$.get(url + '?v=' + version).done(resolve).fail(reject);
-	});
-};
-
+Vue.prototype.$notyf = notyf;
 Vue.prototype.$moment = moment;
 Vue.prototype.$localizer = function (key) {
   return store.localizerStrings[key] || key;

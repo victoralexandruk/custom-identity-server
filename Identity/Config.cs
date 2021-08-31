@@ -13,6 +13,7 @@ namespace Identity
             {
                 new User
                 {
+                    Id = "1",
                     UserName = "admin",
                     Password = "admin",
                     FullName = "Admin User",
@@ -30,6 +31,7 @@ namespace Identity
                 },
                 new User
                 {
+                    Id = "2",
                     UserName = "demo",
                     Password = "demo",
                     FullName = "Demo User",
@@ -57,7 +59,7 @@ namespace Identity
                     ClientId = "demo",
                     ClientName = "Demo Client",
                     LogoUri = "",
-                    ClientSecret = new Secret("demo".Sha256()),
+                    ClientSecret = "demo".Sha256(),
                     AllowedUris = { "https://localhost:5005" },
                     FrontChannelLogoutUri = "https://localhost:5005/Home/Signout"
                 }

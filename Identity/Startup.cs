@@ -1,11 +1,14 @@
+using Dapper;
 using Identity.Data;
 using Identity.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO;
 using System.Linq;
 
 namespace Identity
@@ -162,14 +165,30 @@ namespace Identity
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
+                var sqlPath = "database.sql";
+                if (!string.IsNullOrWhiteSpace(sqlPath) && File.Exists(sqlPath))
+                {
+                    string sql = File.ReadAllText(sqlPath);
+                    using (var db = new SqliteConnection("Data Source=identity_dev.db"))
+                    {
+                        db.Execute(sql);
+                    }
+                }
+                
                 var userRepository = serviceScope.ServiceProvider.GetRequiredService<UserRepository>();
                 foreach (var user in Config.Users)
                 {
                     if (userRepository.FindByUsername(user.UserName) == null)
-                        userRepository.Create(user, user.Password);
+                        userRepository.Save(user);
                 }
 
-                MemoryData.Clients = Config.Clients.ToList();
+                var clientRepository = serviceScope.ServiceProvider.GetRequiredService<ClientRepository>();
+                foreach (var client in Config.Clients)
+                {
+                    if (clientRepository.FindByClientId(client.ClientId) == null)
+                        clientRepository.Save(client);
+                }
+
                 MemoryData.ApiScopes = Config.ApiScopes.ToList();
                 MemoryData.Apis = Config.Apis.ToList();
             }

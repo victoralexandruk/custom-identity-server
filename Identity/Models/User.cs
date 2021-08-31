@@ -5,12 +5,14 @@ namespace Identity.Models
 {
     public class User : IdentityUser
     {
+        [PersonalData]
         public string FullName { get; set; }
 
         public bool Active { get; set; }
 
         public string Password { get; set; }
 
+        [PersonalData]
         public string SubjectId
         {
             get

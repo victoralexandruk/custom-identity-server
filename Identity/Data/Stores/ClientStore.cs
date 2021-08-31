@@ -14,9 +14,10 @@ namespace Identity.Data.Stores
             _clientRepository = clientRepository;
         }
 
-        public async Task<Client> FindClientByIdAsync(string clientId)
+        public Task<Client> FindClientByIdAsync(string clientId)
         {
-            return await _clientRepository.FindClientByIdAsync(clientId);
+            var client = _clientRepository.FindByClientId(clientId).ToIdentityClient();
+            return Task.FromResult(client);
         }
     }
 }

@@ -24,10 +24,18 @@ namespace Identity.ControllersApi.Admin
             return _users.GetAll();
         }
 
+        [HttpGet]
         [Route("{id}")]
         public User Get(string id)
         {
             return _users.FindBySubjectId(id);
+        }
+
+        [HttpPut]
+        public User Save([FromBody] User model)
+        {
+            _users.Save(model);
+            return model;
         }
     }
 }

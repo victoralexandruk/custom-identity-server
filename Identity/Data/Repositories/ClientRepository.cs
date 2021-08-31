@@ -1,20 +1,64 @@
-﻿using Identity.Models;
-using IdentityServer4.Models;
+﻿using Dapper;
+using Identity.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Identity.Data.Repositories
 {
-    public class ClientRepository
+    public class ClientRepository : BaseRepository
     {
-        // Replce this with your Client persistence.
-        private readonly List<CustomClient> _clients = MemoryData.Clients;
-
-        public Task<Client> FindClientByIdAsync(string clientId)
+        public void Save(CustomClient model)
         {
-            var client = _clients.FirstOrDefault(x => x.ClientId == clientId);
-            return Task.FromResult(client?.ToIdentityClient());
+            var old = FindByClientId(model.ClientId);
+            if (old == null)
+            {
+                InsertSql("Client", "ClientId, ClientName, ClientSecret, LogoUri, RequireClientSecret", model);
+                UpdateAllowedUris(model);
+            }
+            else
+            {
+                UpdateSql("Client", "ClientName, LogoUri, RequireClientSecret", model, "ClientId = @ClientId");
+                UpdateAllowedUris(model);
+            }
+        }
+
+        public void Delete(string clientId)
+        {
+            using (var db = GetConn())
+            {
+                db.Execute("DELETE FROM Client WHERE ClientId = @clientId", new { clientId });
+            }
+        }
+
+        public CustomClient FindByClientId(string clientId)
+        {
+            using (var db = GetConn())
+            {
+                return db.Query<CustomClient, string, CustomClient>("SELECT * FROM Client WHERE ClientId = @clientId", (client, allowedUris) =>
+                {
+                    if (!string.IsNullOrWhiteSpace(allowedUris))
+                        client.AllowedUris = JsonSerializer.Deserialize<ICollection<string>>(allowedUris);
+                    return client;
+                }, new { clientId }, splitOn: "AllowedUris").FirstOrDefault();
+            }
+        }
+
+        public IEnumerable<CustomClient> GetAll()
+        {
+            using (var db = GetConn())
+            {
+                return db.Query<CustomClient>("SELECT ClientId, ClientName, LogoUri FROM Client");
+            }
+        }
+
+        private void UpdateAllowedUris(CustomClient model)
+        {
+            UpdateSql("Client", "AllowedUris", new
+            {
+                ClientId = model.ClientId,
+                AllowedUris = JsonSerializer.Serialize(model.AllowedUris)
+            }, "ClientId = @ClientId");
         }
     }
 }
