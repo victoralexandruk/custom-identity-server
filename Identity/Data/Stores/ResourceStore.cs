@@ -3,6 +3,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Identity.Data.Stores
@@ -19,13 +20,15 @@ namespace Identity.Data.Stores
         public async Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
         {
             if (apiResourceNames == null) throw new ArgumentNullException(nameof(apiResourceNames));
-            return await _resourceRepository.FindApiResourcesByNameAsync(apiResourceNames);
+            var resources = await _resourceRepository.FindApiResourcesByNameAsync(apiResourceNames);
+            return resources.Select(x => x.ToIdentityApiResource());
         }
 
         public async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
             if (scopeNames == null) throw new ArgumentNullException(nameof(scopeNames));
-            return await _resourceRepository.FindApiResourcesByScopeNameAsync(scopeNames);
+            var resources = await _resourceRepository.FindApiResourcesByScopeNameAsync(scopeNames);
+            return resources.Select(x => x.ToIdentityApiResource());
         }
 
         public async Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)

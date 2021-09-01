@@ -82,13 +82,14 @@ namespace Identity
                 new ApiScope("policyserver.management")
             };
 
-        public static IEnumerable<ApiResource> Apis =>
-            new List<ApiResource>
+        public static IEnumerable<CustomApiResource> Apis =>
+            new List<CustomApiResource>
             {
-                new ApiResource("api", "Custom Identity API")
+                new CustomApiResource
                 {
-                    ApiSecrets = { new Secret("secret".Sha256()) },
-                    Scopes = { CustomScopes.CustomIdentityApi, "api.scope1", "api.scope2" }
+                    Name = "api",
+                    DisplayName = "Custom Identity API",
+                    Secret = "secret".Sha256()
                 }
             };
     }

@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using Identity.Models;
+using IdentityServer4.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Identity.Data.Repositories
         private List<ApiScope> _apiScopes = MemoryData.ApiScopes;
 
         // Replce this with your ApiResource persistence.
-        private List<ApiResource> _apis = MemoryData.Apis;
+        private List<CustomApiResource> _apis = MemoryData.Apis;
 
         // Replce this with your IdentityResource persistence.
         private IEnumerable<IdentityResource> _identityResources =>
@@ -22,13 +23,23 @@ namespace Identity.Data.Repositories
                 new IdentityResources.Email(),
             };
 
-        public Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
+        public IEnumerable<CustomApiResource> GetAllApiResources()
+        {
+            return _apis;
+        }
+
+        public CustomApiResource FindApiResourceById(string id)
+        {
+            return _apis.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Task<IEnumerable<CustomApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
         {
             var resources = _apis.Where(x => apiResourceNames.Contains(x.Name));
             return Task.FromResult(resources);
         }
 
-        public Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+        public Task<IEnumerable<CustomApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
             var resources = _apis.Where(x => x.Scopes.Any(s => scopeNames.Contains(s)));
             return Task.FromResult(resources);

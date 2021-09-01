@@ -108,4 +108,19 @@ const api = {
       data: formData
     });
   },
+  /* Resources ============================================================== */
+  getApiResources() {
+    return this.ajax({
+      type: "GET",
+      url: `${apiUrls.admin}/resource/api`,
+      dataType: "json"
+    });
+  },
+  getApiResource(id) {
+    return this.ajax({
+      type: "GET",
+      url: `${apiUrls.admin}/resource/api/${id}`,
+      dataType: "json"
+    });
+  },
 };

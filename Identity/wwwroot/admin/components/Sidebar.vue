@@ -35,6 +35,12 @@
             {{$localizer('Clients')}}
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/api" class="nav-link">
+            <i class="icon-box"></i>
+            {{$localizer('APIs')}}
+          </router-link>
+        </li>
       </ul>
     </div>
   </nav>
