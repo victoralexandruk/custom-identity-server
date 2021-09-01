@@ -9,6 +9,10 @@
           </div>
           <input type="text" class="form-control form-control-sm border-left-0" v-model="filter" :placeholder="$localizer('Search') + '...'">
         </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary ml-2" onclick="$('#modalImportUsers').modal('show')">
+          <i class="icon-upload-cloud"></i>
+          {{$localizer('Import')}}
+        </button>
         <router-link to="/user/new" class="btn btn-sm btn-outline-secondary ml-2">
           <i class="icon-plus-circle"></i>
           {{$localizer('New')}}
@@ -42,11 +46,15 @@
         </tbody>
       </table>
     </div>
+    <import-user-modal @save="loadData()"></import-user-modal>
   </div>
 </template>
 
 <script>
 module.exports = {
+  components: {
+		ImportUserModal: httpVueLoader('components/modals/ImportUserModal.vue')
+	},
   data() {
     return {
       users: null,
@@ -62,8 +70,13 @@ module.exports = {
       }
     }
   },
+  methods: {
+    loadData() {
+      api.getUsers().then(users => this.users = users);
+    }
+  },
   created() {
-    api.getUsers().then(users => this.users = users);
+    this.loadData();
   }
 }
 </script>

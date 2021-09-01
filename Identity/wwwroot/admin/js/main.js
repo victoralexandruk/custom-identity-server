@@ -4,7 +4,7 @@ const store = {
 };
 
 httpVueLoader.httpRequest = function (url) {
-	const version = '20210829.02';
+	const version = '20210829.05';
 	return new Promise(function(resolve, reject) {
 		$.get(url + '?v=' + version).done(resolve).fail(reject);
 	});
@@ -38,9 +38,6 @@ Vue.mixin({
     return store;
   }
 });
-
-Vue.component('topbar', httpVueLoader('components/Topbar.vue'));
-Vue.component('sidebar', httpVueLoader('components/Sidebar.vue'));
 
 const router = new VueRouter({
   routes: [

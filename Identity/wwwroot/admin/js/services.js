@@ -58,6 +58,15 @@ const api = {
       data: JSON.stringify(user)
     });
   },
+  saveUsers(users) {
+    return this.ajax({
+      type: "PUT",
+      url: `${apiUrls.admin}/user/batch`,
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(users)
+    });
+  },
   /* Clients ================================================================ */
   getClients() {
     return this.ajax({

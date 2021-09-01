@@ -11,3 +11,12 @@
     </div>
 	</div>
 </template>
+
+<script>
+module.exports = {
+	components: {
+		Topbar: httpVueLoader('components/Topbar.vue'),
+		Sidebar: httpVueLoader('components/Sidebar.vue')
+	}
+}
+</script>

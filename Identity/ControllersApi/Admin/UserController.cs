@@ -37,5 +37,17 @@ namespace Identity.ControllersApi.Admin
             _users.Save(model);
             return model;
         }
+
+        [HttpPut]
+        [Route("batch")]
+        public IEnumerable<User> SaveBatch([FromBody] IEnumerable<User> models)
+        {
+            foreach (var model in models)
+            {
+                model.Id = _users.FindByUsername(model.UserName)?.Id;
+                _users.Save(model);
+            }
+            return models;
+        }
     }
 }
