@@ -24,10 +24,6 @@
               <td><input type="text" v-model="apiResource.displayName" class="form-control form-control-sm" required /></td>
             </tr>
             <tr>
-              <th>{{$localizer('Secret')}}</th>
-              <td><input type="text" v-model="apiResource.secret" class="form-control form-control-sm" required /></td>
-            </tr>
-            <tr>
               <th>{{$localizer('Enabled')}}</th>
               <td><i class="h4" :class="{'icon-toggle-on text-success': apiResource.enabled, 'icon-toggle-off text-muted': !apiResource.enabled}" @click="apiResource.enabled = !apiResource.enabled"></i></td>
             </tr>
@@ -98,7 +94,6 @@ module.exports = {
         this.apiResource = {
           name: '',
           displayName: '',
-          secret: '',
           enabled: true
         };
       } else {

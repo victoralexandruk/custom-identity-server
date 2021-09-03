@@ -8,16 +8,10 @@ namespace Identity.Models
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        public string Secret { get; set; } = Guid.NewGuid().ToString().Sha256();
-
         public ApiResource ToIdentityApiResource()
         {
             var identityApiResource = new ApiResource(this.Name, this.DisplayName)
             {
-                ApiSecrets =
-                {
-                    new Secret(this.Secret)
-                },
                 Scopes =
                 {
                     CustomScopes.CustomIdentityApi

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Samples.Web
@@ -50,11 +51,11 @@ namespace Samples.Web
 
                     options.ResponseType = "code id_token";
 
-                    options.Authority = "https://localhost:5001";
+                    options.Authority = Configuration["Authentication:Authority"];
                     options.RequireHttpsMetadata = false;
 
-                    options.ClientId = "demo";
-                    options.ClientSecret = "demo";
+                    options.ClientId = Configuration["Authentication:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:ClientSecret"];
 
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
@@ -62,15 +63,9 @@ namespace Samples.Web
                     options.UseTokenLifetime = true;
                     options.UsePkce = true;
 
-                    options.Scope.Add("openid");
-                    options.Scope.Add("profile");
-                    options.Scope.Add("api");
-                    options.Scope.Add("offline_access");
-
-                    options.Events.OnTokenResponseReceived = (context) =>
-                    {
-                        return Task.CompletedTask;
-                    };
+                    var scopes = Configuration["Authentication:Scopes"].Split(" ");
+                    foreach (var scope in scopes)
+                        options.Scope.Add(scope);
                 });
 
             services.AddAuthorization(options =>

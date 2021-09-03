@@ -69,8 +69,7 @@ namespace Identity
                 new CustomApiResource
                 {
                     Name = "api",
-                    DisplayName = "Custom Identity API",
-                    Secret = "secret".Sha256()
+                    DisplayName = "Custom Identity API"
                 }
             };
 

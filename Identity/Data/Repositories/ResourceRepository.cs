@@ -33,7 +33,7 @@ namespace Identity.Data.Repositories
             var old = FindApiResourceById(model.Id);
             if (old == null)
             {
-                InsertSql("Api", "Id, Name, Secret, DisplayName, Enabled", model);
+                InsertSql("Api", "Id, Name, DisplayName, Enabled", model);
             }
             else
             {
