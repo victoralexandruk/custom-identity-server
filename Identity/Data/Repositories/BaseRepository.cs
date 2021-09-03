@@ -7,9 +7,11 @@ namespace Identity.Data.Repositories
 {
     public abstract class BaseRepository
     {
+        protected string _connectionString;
+
         protected IDbConnection GetConn()
         {
-            return new SqliteConnection("Data Source=identity_dev.db");
+            return new SqliteConnection(_connectionString);
         }
 
         protected void InsertSql(string table, string columns, object model)

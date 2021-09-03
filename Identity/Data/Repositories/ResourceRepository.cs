@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Identity.Models;
 using IdentityServer4.Models;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,6 +21,11 @@ namespace Identity.Data.Repositories
                 new IdentityResources.Profile(),
                 new IdentityResources.Email(),
             };
+
+        public ResourceRepository(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
 
         #region ApiResource
         public void SaveApiResource(CustomApiResource model)

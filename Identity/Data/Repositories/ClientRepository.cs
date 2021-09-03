@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Identity.Models;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -8,6 +9,11 @@ namespace Identity.Data.Repositories
 {
     public class ClientRepository : BaseRepository
     {
+        public ClientRepository(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
         public void Save(CustomClient model)
         {
             var old = FindByClientId(model.ClientId);

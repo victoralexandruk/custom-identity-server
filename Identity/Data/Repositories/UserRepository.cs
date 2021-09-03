@@ -4,6 +4,7 @@ using System;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace Identity.Data.Repositories
 {
@@ -11,8 +12,9 @@ namespace Identity.Data.Repositories
     {
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UserRepository(IPasswordHasher<User> passwordHasher)
+        public UserRepository(IConfiguration configuration, IPasswordHasher<User> passwordHasher)
         {
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
             _passwordHasher = passwordHasher;
         }
 
