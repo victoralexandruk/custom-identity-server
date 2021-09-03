@@ -13,7 +13,6 @@ namespace Identity
             {
                 new User
                 {
-                    Id = "1",
                     UserName = "admin",
                     Password = "admin",
                     FullName = "Admin User",
@@ -31,7 +30,6 @@ namespace Identity
                 },
                 new User
                 {
-                    Id = "2",
                     UserName = "demo",
                     Password = "demo",
                     FullName = "Demo User",
@@ -65,6 +63,17 @@ namespace Identity
                 }
             };
 
+        public static IEnumerable<CustomApiResource> Apis =>
+            new List<CustomApiResource>
+            {
+                new CustomApiResource
+                {
+                    Name = "api",
+                    DisplayName = "Custom Identity API",
+                    Secret = "secret".Sha256()
+                }
+            };
+
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>
             {
@@ -80,17 +89,6 @@ namespace Identity
                 // policyserver
                 new ApiScope("policyserver.runtime"),
                 new ApiScope("policyserver.management")
-            };
-
-        public static IEnumerable<CustomApiResource> Apis =>
-            new List<CustomApiResource>
-            {
-                new CustomApiResource
-                {
-                    Name = "api",
-                    DisplayName = "Custom Identity API",
-                    Secret = "secret".Sha256()
-                }
             };
     }
 }

@@ -34,6 +34,21 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Danger Zone -->
+      <div v-if="!isNew" class="list-group alert-danger mt-3">
+        <div class="list-group-item border-danger p-0" style="overflow: hidden;">
+          <h5 class="alert-danger p-2 m-0">{{$localizer('Danger Zone')}}</h5>
+        </div>
+        <div class="list-group-item d-flex justify-content-between align-items-start border-danger">
+          <div>
+            <h6 class="mb-1">{{$localizer('Delete this API')}}</h6>
+            <p class="m-0">{{$localizer('NoGoingBackDelete')}}</p>
+          </div>
+          <button type="button" class="btn btn-outline-danger" @click="deleteApi()">{{$localizer('Delete')}}</button>
+        </div>
+      </div>
+      <!-- =========== -->
     </form>
   </div>
 </template>
@@ -45,26 +60,59 @@ module.exports = {
       apiResource: null
     };
   },
+  computed: {
+    isNew() {
+      return this.$route.params.id === 'new';
+    }
+  },
   methods: {
     save() {
       api.saveApiResource(this.apiResource).then(response => {
         this.$notyf.success(this.$localizer('Saved'));
+        this.$router.push(`/api/${response.id}`);
       }).catch(error => {
         this.$notyf.error(this.$localizer('Error'));
       });
+    },
+    deleteApi() {
+      swal({
+        title: this.$localizer("Delete?"),
+        text: this.$localizer("This action can't be undone."),
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          api.deleteApiResource(this.apiResource.id).then(() => {
+            notyf.success(this.$localizer('API removed'));
+            this.$router.push('/api');
+          }).catch(error => {
+            this.$notyf.error(this.$localizer('Error'));
+          });
+        }
+      });
+    },
+    loadData() {
+      this.apiResource = null;
+      if (this.isNew) {
+        this.apiResource = {
+          name: '',
+          displayName: '',
+          secret: '',
+          enabled: true
+        };
+      } else {
+        api.getApiResource(this.$route.params.id).then(apiResource => this.apiResource = apiResource);
+      }
+    }
+  },
+  watch: {
+    "$route.params.id": function () {
+      this.loadData();
     }
   },
   created() {
-    if (this.$route.params.id === 'new') {
-      this.apiResource = {
-        name: '',
-        displayName: '',
-        secret: '',
-        enabled: true
-      };
-    } else {
-      api.getApiResource(this.$route.params.id).then(apiResource => this.apiResource = apiResource);
-    }
+    this.loadData();
   }
 }
 </script>

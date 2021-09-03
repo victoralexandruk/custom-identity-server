@@ -123,4 +123,19 @@ const api = {
       dataType: "json"
     });
   },
+  saveApiResource(apiResource) {
+    return this.ajax({
+      type: "PUT",
+      url: `${apiUrls.admin}/resource/api`,
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(apiResource)
+    });
+  },
+  deleteApiResource(id) {
+    return this.ajax({
+      type: "DELETE",
+      url: `${apiUrls.admin}/resource/api/${id}`,
+    });
+  },
 };

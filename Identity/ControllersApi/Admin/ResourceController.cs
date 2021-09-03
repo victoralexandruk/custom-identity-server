@@ -20,16 +20,32 @@ namespace Identity.ControllersApi.Admin
 
         [HttpGet]
         [Route("api")]
-        public IEnumerable<CustomApiResource> GetAll()
+        public IEnumerable<CustomApiResource> GetAllApiResources()
         {
             return _resources.GetAllApiResources();
         }
 
         [HttpGet]
         [Route("api/{id}")]
-        public CustomApiResource Get(string id)
+        public CustomApiResource GetApiResource(string id)
         {
             return _resources.FindApiResourceById(id);
+        }
+
+        [HttpPut]
+        [Route("api")]
+        public CustomApiResource SaveApiResource([FromBody] CustomApiResource model)
+        {
+            _resources.SaveApiResource(model);
+            return model;
+        }
+
+        [HttpDelete]
+        [Route("api/{id}")]
+        public IActionResult DeleteApiResource(string id)
+        {
+            _resources.DeleteApiResource(id);
+            return Ok();
         }
     }
 }

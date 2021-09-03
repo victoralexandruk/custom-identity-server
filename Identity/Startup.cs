@@ -189,8 +189,14 @@ namespace Identity
                         clientRepository.Save(client);
                 }
 
+                var resourceRepository = serviceScope.ServiceProvider.GetRequiredService<ResourceRepository>();
+                foreach (var api in Config.Apis)
+                {
+                    if (resourceRepository.FindApiResourceByName(api.Name) == null)
+                        resourceRepository.SaveApiResource(api);
+                }
+
                 MemoryData.ApiScopes = Config.ApiScopes.ToList();
-                MemoryData.Apis = Config.Apis.ToList();
             }
         }
     }

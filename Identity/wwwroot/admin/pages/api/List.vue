@@ -26,6 +26,7 @@
           <tr>
             <th>{{$localizer('DisplayName')}}</th>
             <th>{{$localizer('Name')}}</th>
+            <th class="text-center" style="width: 74px;">{{$localizer('Enabled')}}</th>
             <th></th>
           </tr>
         </thead>
@@ -33,6 +34,7 @@
           <tr v-for="apiResource in filteredApis">
             <td class="align-middle">{{apiResource.displayName}}</td>
             <td class="align-middle">{{apiResource.name}}</td>
+            <td class="align-middle text-center"><i class="font-weight-bold" :class="{'icon-check text-success': apiResource.enabled, 'icon-x text-danger': !apiResource.enabled}"></i></td>
             <td class="align-middle text-right">
               <router-link :to="'/api/' + apiResource.id" class="btn btn-sm btn-outline-secondary"><i class="icon-edit-2"></i></router-link>
             </td>
