@@ -30,6 +30,8 @@ namespace Identity
             // cookie policy to deal with temporary browser incompatibilities
             services.AddSameSiteCookiePolicy();
 
+            services.AddDistributedMemoryCache();
+
             var identityServer = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;

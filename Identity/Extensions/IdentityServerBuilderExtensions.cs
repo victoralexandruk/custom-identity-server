@@ -42,6 +42,12 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
+        public static IIdentityServerBuilder AddCustomPersistedGrantStore(this IIdentityServerBuilder builder)
+        {
+            builder.AddPersistedGrantStore<PersistedGrantStore>();
+            return builder;
+        }
+
         public static IIdentityServerBuilder LoadSigningCertificate(this IIdentityServerBuilder builder, string certificatePath, string certificatePassword)
         {
             if (!File.Exists(certificatePath))
