@@ -4,7 +4,7 @@ const store = {
 };
 
 httpVueLoader.httpRequest = function (url) {
-	const version = '20210829.06';
+	const version = '20210829.07';
 	return new Promise(function(resolve, reject) {
 		$.get(url + '?v=' + version).done(resolve).fail(reject);
 	});

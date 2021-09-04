@@ -26,6 +26,7 @@
           <tr>
             <th>{{$localizer('Name')}}</th>
             <th>{{$localizer('ClientId')}}</th>
+            <th class="text-center" style="width: 74px;">{{$localizer('Enabled')}}</th>
             <th></th>
           </tr>
         </thead>
@@ -33,6 +34,7 @@
           <tr v-for="client in filteredClients">
             <td class="align-middle">{{client.clientName}}</td>
             <td class="align-middle">{{client.clientId}}</td>
+            <td class="align-middle text-center"><i class="font-weight-bold" :class="{'icon-check text-success': client.enabled, 'icon-x text-danger': !client.enabled}"></i></td>
             <td class="align-middle text-right">
               <router-link :to="'/client/' + client.clientId" class="btn btn-sm btn-outline-secondary"><i class="icon-edit-2"></i></router-link>
             </td>

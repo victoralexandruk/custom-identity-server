@@ -42,7 +42,6 @@ namespace Identity.Models
                     CustomScopes.CustomIdentityApi
                 },
 
-                RequireClientSecret = this.RequireClientSecret,
                 AllowOfflineAccess = true,
                 AllowAccessTokensViaBrowser = true,
                 RequirePkce = false,

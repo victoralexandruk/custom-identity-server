@@ -23,12 +23,12 @@ namespace Identity.Data.Repositories
                 if (string.IsNullOrWhiteSpace(model.ClientSecret))
                     model.ClientSecret = RandomStringHelper.RandomString(48);
 
-                InsertSql("Client", "ClientId, ClientName, ClientSecret, LogoUri, RequireClientSecret", model);
+                InsertSql("Client", "ClientId, ClientName, ClientSecret, LogoUri, Enabled", model);
                 UpdateAllowedUris(model);
             }
             else
             {
-                UpdateSql("Client", "ClientName, LogoUri, RequireClientSecret", model, "ClientId = @ClientId");
+                UpdateSql("Client", "ClientName, LogoUri, Enabled", model, "ClientId = @ClientId");
                 UpdateAllowedUris(model);
             }
         }
@@ -58,7 +58,7 @@ namespace Identity.Data.Repositories
         {
             using (var db = GetConn())
             {
-                return db.Query<CustomClient>("SELECT ClientId, ClientName, LogoUri FROM Client");
+                return db.Query<CustomClient>("SELECT ClientId, ClientName, LogoUri, Enabled FROM Client");
             }
         }
 

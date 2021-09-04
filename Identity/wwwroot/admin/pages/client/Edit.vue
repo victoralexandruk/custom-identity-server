@@ -35,6 +35,10 @@
               </td>
             </tr>
             <tr>
+              <th>{{$localizer('Enabled')}}</th>
+              <td><i class="h4" :class="{'icon-toggle-on text-success': client.enabled, 'icon-toggle-off text-muted': !client.enabled}" @click="client.enabled = !client.enabled"></i></td>
+            </tr>
+            <tr>
               <th>{{$localizer('Logo')}}</th>
               <td>
                 <div class="logo-preview border rounded" :class="{'no-img': !client.logoUri}" :style="{backgroundImage: `url(${client.logoUri})`}">
@@ -165,6 +169,7 @@ module.exports = {
         this.client = {
           clientName: '',
           logoUri: '',
+          enabled: true,
           allowedUris: []
         };
       } else {

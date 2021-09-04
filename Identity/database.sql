@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS [Client] (
 	[ClientName] NVARCHAR(255) NOT NULL UNIQUE,
 	[ClientSecret] NVARCHAR(255) NOT NULL,
    	[LogoUri] NVARCHAR(255),
-	[RequireClientSecret] TINYINT NOT NULL DEFAULT 1,
+	[Enabled] TINYINT NOT NULL DEFAULT 1,
 	[AllowedUris] TEXT
 );
 
