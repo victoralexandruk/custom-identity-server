@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Identity.Helpers;
 using Identity.Models;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -19,6 +20,9 @@ namespace Identity.Data.Repositories
             var old = FindByClientId(model.ClientId);
             if (old == null)
             {
+                if (string.IsNullOrWhiteSpace(model.ClientSecret))
+                    model.ClientSecret = RandomStringHelper.RandomString(48);
+
                 InsertSql("Client", "ClientId, ClientName, ClientSecret, LogoUri, RequireClientSecret", model);
                 UpdateAllowedUris(model);
             }

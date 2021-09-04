@@ -48,16 +48,10 @@ namespace Identity
             {
                 new CustomClient
                 {
-                    ClientId = "local",
-                    ClientName = "Local Client",
-                    RequireClientSecret = false
-                },
-                new CustomClient
-                {
                     ClientId = "demo",
                     ClientName = "Demo Client",
                     LogoUri = "",
-                    ClientSecret = "demo".Sha256(),
+                    ClientSecret = "demo",
                     AllowedUris = { "https://localhost:5005" },
                     FrontChannelLogoutUri = "https://localhost:5005/Home/Signout"
                 }

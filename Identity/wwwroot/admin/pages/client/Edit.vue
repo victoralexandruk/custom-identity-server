@@ -16,16 +16,23 @@
         <table class="table table-striped table-sm">
           <tbody>
             <tr>
-              <th class="w-25">{{$localizer('ClientId')}}</th>
-              <td><input type="text" :value="client.clientId" :placeholder="$localizer('Save to generate...')" class="form-control form-control-sm" disabled /></td>
-            </tr>
-            <tr>
-              <th>{{$localizer('ClientName')}}</th>
+              <th class="w-25">{{$localizer('ClientName')}}</th>
               <td><input type="text" v-model="client.clientName" class="form-control form-control-sm" required /></td>
             </tr>
             <tr>
+              <th>{{$localizer('ClientId')}}</th>
+              <td><input type="text" :value="client.clientId" :placeholder="$localizer('Save to generate...')" class="form-control form-control-sm" disabled /></td>
+            </tr>
+            <tr>
               <th>{{$localizer('ClientSecret')}}</th>
-              <td><input type="text" v-model="client.clientSecret" class="form-control form-control-sm" required /></td>
+              <td>
+                <div class="input-group">
+                  <input :type="secretType" :value="client.clientSecret" :placeholder="$localizer('Save to generate...')" class="form-control form-control-sm" disabled />
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" @click="secretHidden = !secretHidden"><i :class="{'icon-eye-off': secretHidden, 'icon-eye': !secretHidden}"></i></button>
+                  </div>
+                </div>
+              </td>
             </tr>
             <tr>
               <th>{{$localizer('Logo')}}</th>
@@ -102,13 +109,15 @@ module.exports = {
   data: function () {
     return {
       client: null,
-      roles: [],
-      editRole: null
+      secretHidden: true
     };
   },
   computed: {
     isNew() {
       return this.$route.params.id === 'new';
+    },
+    secretType() {
+      return this.secretHidden ? 'password' : 'text';
     }
   },
   methods: {
@@ -138,16 +147,6 @@ module.exports = {
         }
       });
     },
-    // loadRoles() {
-    //   api.searchRoles('userId', this.$route.params.id, true).then(roles => this.roles = roles);
-    // },
-    // openModalRole(role) {
-    //   this.editRole = role || {
-    //     userId: this.id,
-    //     roleId: ''
-    //   };
-    //   $('#modalRole').modal('show');
-    // },
     onChangeLogo(event) {
       var files = event.target.files || event.dataTransfer.files;
       if(!files.length) return;
@@ -165,7 +164,6 @@ module.exports = {
       if (this.isNew) {
         this.client = {
           clientName: '',
-          clientSecret: '',
           logoUri: '',
           allowedUris: []
         };
@@ -173,7 +171,6 @@ module.exports = {
         api.getClient(this.$route.params.id).then(client => this.client = client);
       }
     }
-
   },
   watch: {
     "$route.params.id": function () {

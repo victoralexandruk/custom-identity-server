@@ -11,7 +11,7 @@ namespace Identity.Models
     {
         public new string ClientId { get; set; } = Guid.NewGuid().ToString();
 
-        public string ClientSecret { get; set; } = Guid.NewGuid().ToString().Sha256();
+        public string ClientSecret { get; set; }
 
         public ICollection<string> AllowedUris { get; set; } = new List<string>();
 
@@ -25,7 +25,7 @@ namespace Identity.Models
                 AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
                 ClientSecrets =
                 {
-                    new Secret(this.ClientSecret)
+                    new Secret(this.ClientSecret.Sha256())
                 },
 
                 // where to redirect to after login
