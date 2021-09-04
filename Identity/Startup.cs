@@ -30,6 +30,8 @@ namespace Identity
             // cookie policy to deal with temporary browser incompatibilities
             services.AddSameSiteCookiePolicy();
 
+            services.AddScoped<RoleRepository>();
+
             var identityServer = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
@@ -175,7 +177,14 @@ namespace Identity
                         db.Execute(sql);
                     }
                 }
-                
+
+                var roleRepository = serviceScope.ServiceProvider.GetRequiredService<RoleRepository>();
+                foreach (var role in Config.Roles)
+                {
+                    if (roleRepository.FindByName(role.Name) == null)
+                        roleRepository.Save(role);
+                }
+
                 var userRepository = serviceScope.ServiceProvider.GetRequiredService<UserRepository>();
                 foreach (var user in Config.Users)
                 {

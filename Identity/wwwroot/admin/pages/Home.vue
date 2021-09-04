@@ -29,6 +29,7 @@ module.exports = {
         {to: '/user', icon: 'icon-users', label: 'Users', description: 'Create/manage users.'},
         {to: '/client', icon: 'icon-globe', label: 'Clients', description: 'Create/manage clients.'},
         {to: '/api', icon: 'icon-box', label: 'APIs', description: 'Create/manage APIs.'},
+        {to: '/role', icon: 'icon-settings', label: 'Roles', description: 'Create/manage roles.'},
       ]
     };
   }

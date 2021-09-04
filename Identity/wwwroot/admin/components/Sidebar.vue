@@ -41,6 +41,12 @@
             {{$localizer('APIs')}}
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/role" class="nav-link">
+            <i class="icon-settings"></i>
+            {{$localizer('Roles')}}
+          </router-link>
+        </li>
       </ul>
     </div>
   </nav>

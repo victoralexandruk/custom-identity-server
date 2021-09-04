@@ -138,4 +138,34 @@ const api = {
       url: `${apiUrls.admin}/resource/api/${id}`,
     });
   },
+  /* Roles ================================================================== */
+  getRoles() {
+    return this.ajax({
+      type: "GET",
+      url: `${apiUrls.admin}/role`,
+      dataType: "json"
+    });
+  },
+  getRole(id) {
+    return this.ajax({
+      type: "GET",
+      url: `${apiUrls.admin}/role/${id}`,
+      dataType: "json"
+    });
+  },
+  saveRole(role) {
+    return this.ajax({
+      type: "PUT",
+      url: `${apiUrls.admin}/role`,
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(role)
+    });
+  },
+  deleteRole(id) {
+    return this.ajax({
+      type: "DELETE",
+      url: `${apiUrls.admin}/role/${id}`,
+    });
+  },
 };

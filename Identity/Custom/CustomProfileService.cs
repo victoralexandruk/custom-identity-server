@@ -40,9 +40,9 @@ namespace Identity.Custom
             {
                 new Claim(CustomClaimTypes.UserName, user.UserName),
                 new Claim(JwtClaimTypes.Name, user.FullName),
-                new Claim(JwtClaimTypes.Email, user.Email)
+                new Claim(JwtClaimTypes.Email, user.Email),
+                new Claim(JwtClaimTypes.Role, user.Role)
             };
-            user.Roles?.ToList().ForEach(role => claims.Add(new Claim(JwtClaimTypes.Role, role.RoleId)));
 
             //context.IssuedClaims = claims;
             context.IssuedClaims.AddRange(claims);

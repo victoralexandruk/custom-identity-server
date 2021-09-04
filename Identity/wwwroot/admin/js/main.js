@@ -4,7 +4,7 @@ const store = {
 };
 
 httpVueLoader.httpRequest = function (url) {
-	const version = '20210829.07';
+	const version = '20210829.08';
 	return new Promise(function(resolve, reject) {
 		$.get(url + '?v=' + version).done(resolve).fail(reject);
 	});
@@ -49,6 +49,8 @@ const router = new VueRouter({
       { path: 'client/:id', component: httpVueLoader('pages/client/Edit.vue') },
       { path: 'api', component: httpVueLoader('pages/api/List.vue') },
       { path: 'api/:id', component: httpVueLoader('pages/api/Edit.vue') },
+      { path: 'role', component: httpVueLoader('pages/role/List.vue') },
+      { path: 'role/:id', component: httpVueLoader('pages/role/Edit.vue') },
     ] },
   ],
   linkExactActiveClass: 'active'

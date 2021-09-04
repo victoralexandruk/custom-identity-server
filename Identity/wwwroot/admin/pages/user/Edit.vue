@@ -28,6 +28,16 @@
               <td><input type="text" v-model="user.email" class="form-control form-control-sm" /></td>
             </tr>
             <tr>
+              <th>{{$localizer('Role')}}</th>
+              <td>
+                <input v-if="!roles" type="text" :placeholder="$localizer('Loading...')" class="form-control form-control-sm" disabled />
+                <select v-if="roles" v-model="user.role" class="form-control form-control-sm" required>
+                  <option value="">{{$localizer('Select...')}}</option>
+                  <option v-for="role in roles" :key="role.name" :value="role.name">{{role.displayName}}</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
               <th>{{$localizer('Active')}}</th>
               <td><i class="h4" :class="{'icon-toggle-on text-success': user.active, 'icon-toggle-off text-muted': !user.active}" @click="user.active = !user.active"></i></td>
             </tr>
@@ -43,8 +53,7 @@ module.exports = {
   data: function () {
     return {
       user: null,
-      roles: [],
-      editRole: null
+      roles: null
     };
   },
   methods: {
@@ -54,6 +63,9 @@ module.exports = {
       }).catch(error => {
         this.$notyf.error(this.$localizer('Error'));
       });
+    },
+    loadRoles() {
+      api.getRoles().then(roles => this.roles = roles);
     }
   },
   created() {
@@ -62,11 +74,13 @@ module.exports = {
         userName: '',
         fullName: '',
         email: '',
+        role: '',
         active: true
       };
     } else {
       api.getUser(this.$route.params.id).then(user => this.user = user);
     }
+    this.loadRoles();
   }
 }
 </script>

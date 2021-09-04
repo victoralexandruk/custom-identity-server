@@ -8,6 +8,21 @@ namespace Identity
 {
     public static class Config
     {
+        public static IEnumerable<Role> Roles =>
+            new List<Role>
+            {
+                new Role
+                {
+                    Name = "identity.admin",
+                    DisplayName = "Admin"
+                },
+                new Role
+                {
+                    Name = "identity.user",
+                    DisplayName = "User"
+                }
+            };
+
         public static IEnumerable<User> Users =>
             new List<User>
             {
@@ -17,16 +32,7 @@ namespace Identity
                     Password = "admin",
                     FullName = "Admin User",
                     Email = "admin@localhost.local",
-                    Roles = new List<IdentityUserRole<string>> {
-                        new IdentityUserRole<string>
-                        {
-                            RoleId = "identity.admin"
-                        },
-                        new IdentityUserRole<string>
-                        {
-                            RoleId = "identity.user"
-                        }
-                    }
+                    Role = "identity.admin"
                 },
                 new User
                 {
@@ -34,12 +40,7 @@ namespace Identity
                     Password = "demo",
                     FullName = "Demo User",
                     Email = "demo@localhost.local",
-                    Roles = new List<IdentityUserRole<string>> {
-                        new IdentityUserRole<string>
-                        {
-                            RoleId = "identity.user"
-                        }
-                    }
+                    Role = "identity.user"
                 }
             };
 

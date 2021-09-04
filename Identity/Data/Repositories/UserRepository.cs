@@ -27,14 +27,12 @@ namespace Identity.Data.Repositories
             if (old == null)
             {
                 user.Active = true;
-                InsertSql("User", "Id, UserName, FullName, Email, Active", user);
+                InsertSql("User", "Id, UserName, FullName, Email, Role, Active", user);
             }
             else
             {
-                UpdateSql("User", "UserName, FullName, Email, Active", user, "Id = @Id");
+                UpdateSql("User", "UserName, FullName, Email, Role, Active", user, "Id = @Id");
             }
-
-            user.Roles?.ToList().ForEach(role => role.UserId = user.Id);
             
             if (!string.IsNullOrWhiteSpace(user.Password))
                 UpdatePassword(user, user.Password);

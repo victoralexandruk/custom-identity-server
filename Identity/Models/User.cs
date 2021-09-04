@@ -12,6 +12,8 @@ namespace Identity.Models
 
         public string Password { get; set; }
 
+        public string Role { get; set; }
+
         [PersonalData]
         public string SubjectId
         {
@@ -20,7 +22,5 @@ namespace Identity.Models
                 return Id;
             }
         }
-
-        public ICollection<IdentityUserRole<string>> Roles { get; set; }
     }
 }
