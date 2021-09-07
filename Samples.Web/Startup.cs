@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -66,6 +67,11 @@ namespace Samples.Web
                     var scopes = Configuration["Authentication:Scopes"].Split(" ");
                     foreach (var scope in scopes)
                         options.Scope.Add(scope);
+
+                    //options.ClaimActions.MapUniqueJsonKey("username", "username");
+                    //options.ClaimActions.MapUniqueJsonKey("role", "role");
+                    //options.ClaimActions.MapJsonKey("permission", "permission");
+                    options.ClaimActions.MapAll();
                 });
 
             services.AddAuthorization(options =>

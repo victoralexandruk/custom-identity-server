@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Identity.Custom.Constants;
 using Identity.Models;
 using IdentityServer4.Models;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,10 @@ namespace Identity.Data.Repositories
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Email(),
+                new IdentityResource(
+                    name: CustomScopes.CustomProfile,
+                    displayName: "Custom profile",
+                    userClaims: new[] { CustomClaimTypes.UserName, CustomClaimTypes.FullName, CustomClaimTypes.Permission }),
             };
 
         public ResourceRepository(IConfiguration configuration)

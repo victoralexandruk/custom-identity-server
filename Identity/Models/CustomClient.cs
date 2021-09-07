@@ -41,6 +41,7 @@ namespace Identity.Models
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
+                    CustomScopes.CustomProfile,
                     CustomScopes.CustomIdentityApi
                 },
 

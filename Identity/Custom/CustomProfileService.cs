@@ -46,8 +46,11 @@ namespace Identity.Custom
                 new Claim(JwtClaimTypes.Role, user.Role)
             };
 
+            var client = context.Client;
             var role = _roleRepository.FindByName(user.Role);
-            role?.Permissions?.ToList().ForEach(permission => claims.Add(new Claim(CustomClaimTypes.Permission, permission.Name)));
+            var permissionClaims = role?.Permissions?.Where(x => x.ClientId == client.ClientId).Select(permission => new Claim(CustomClaimTypes.Permission, permission.Name));
+            if (permissionClaims != null)
+                claims.AddRange(permissionClaims);
 
             //context.IssuedClaims = claims;
             context.IssuedClaims.AddRange(claims);
