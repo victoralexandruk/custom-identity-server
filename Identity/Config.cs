@@ -54,7 +54,28 @@ namespace Identity
                     LogoUri = "",
                     ClientSecret = "demo",
                     AllowedUris = { "https://localhost:5005" },
-                    FrontChannelLogoutUri = "https://localhost:5005/Home/Signout"
+                    FrontChannelLogoutUri = "https://localhost:5005/Home/Signout",
+                    Permissions = new List<ClientPermission>
+                    {
+                        new ClientPermission
+                        {
+                            Name = "demo.admin",
+                            DisplayName = "Admin",
+                            Description = "All permissions"
+                        },
+                        new ClientPermission
+                        {
+                            Name = "demo.edit",
+                            DisplayName = "Edit",
+                            Description = "Edit permission"
+                        },
+                        new ClientPermission
+                        {
+                            Name = "demo.read",
+                            DisplayName = "Read",
+                            Description = "Read permission"
+                        }
+                    }
                 }
             };
 
