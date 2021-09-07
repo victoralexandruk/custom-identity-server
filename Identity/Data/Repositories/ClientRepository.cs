@@ -25,11 +25,13 @@ namespace Identity.Data.Repositories
 
                 InsertSql("Client", "ClientId, ClientName, ClientSecret, LogoUri, Enabled", model);
                 UpdateAllowedUris(model);
+                UpdatePermissions(model);
             }
             else
             {
                 UpdateSql("Client", "ClientName, LogoUri, Enabled", model, "ClientId = @ClientId");
                 UpdateAllowedUris(model);
+                UpdatePermissions(model);
             }
         }
 
@@ -45,19 +47,34 @@ namespace Identity.Data.Repositories
         {
             using (var db = GetConn())
             {
-                return db.Query<CustomClient, string, CustomClient>("SELECT * FROM Client WHERE ClientId = @clientId", (client, allowedUris) =>
+                return db.Query<CustomClient, string, string, CustomClient>("SELECT * FROM Client WHERE ClientId = @clientId", (client, allowedUris, permissions) =>
                 {
                     if (!string.IsNullOrWhiteSpace(allowedUris))
                         client.AllowedUris = JsonSerializer.Deserialize<ICollection<string>>(allowedUris);
+                    
+                    if (!string.IsNullOrWhiteSpace(permissions))
+                        client.Permissions = JsonSerializer.Deserialize<IEnumerable<ClientPermission>>(permissions);
+                    
                     return client;
-                }, new { clientId }, splitOn: "AllowedUris").FirstOrDefault();
+                }, new { clientId }, splitOn: "AllowedUris,Permissions").FirstOrDefault();
             }
         }
 
-        public IEnumerable<CustomClient> GetAll()
+        public IEnumerable<CustomClient> GetAll(bool withPermissions = false)
         {
             using (var db = GetConn())
             {
+                if (withPermissions)
+                {
+                    return db.Query<CustomClient, string, CustomClient>("SELECT ClientId, ClientName, LogoUri, Enabled, Permissions FROM Client", (client, permissions) =>
+                    {
+
+                        if (!string.IsNullOrWhiteSpace(permissions))
+                            client.Permissions = JsonSerializer.Deserialize<IEnumerable<ClientPermission>>(permissions);
+
+                        return client;
+                    }, splitOn: "Permissions");
+                }
                 return db.Query<CustomClient>("SELECT ClientId, ClientName, LogoUri, Enabled FROM Client");
             }
         }
@@ -68,6 +85,15 @@ namespace Identity.Data.Repositories
             {
                 ClientId = model.ClientId,
                 AllowedUris = JsonSerializer.Serialize(model.AllowedUris)
+            }, "ClientId = @ClientId");
+        }
+
+        private void UpdatePermissions(CustomClient model)
+        {
+            UpdateSql("Client", "Permissions", new
+            {
+                ClientId = model.ClientId,
+                Permissions = JsonSerializer.Serialize(model.Permissions)
             }, "ClientId = @ClientId");
         }
     }

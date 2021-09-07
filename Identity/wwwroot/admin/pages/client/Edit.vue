@@ -90,6 +90,49 @@
       </div>
       <!-- =========== -->
 
+      <!-- Permissions -->
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <h5 class="mt-3">{{$localizer('Permissions')}}</h5>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <button type="button" class="btn btn-sm btn-outline-secondary" @click="client.permissions.push({name: '', displayName: '', description: ''})">
+            <i class="icon-plus-circle"></i>
+            {{$localizer('Add')}}
+          </button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>{{$localizer('Name')}}</th>
+              <th>{{$localizer('DisplayName')}}</th>
+              <th>{{$localizer('Description')}}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="!client.permissions.length">
+              <td colspan="4" class="font-weight-bold text-muted font-italic py-2">{{$localizer('No permissions')}}</td>
+            </tr>
+            <tr v-for="(permission, index) in client.permissions">
+              <td class="align-middle">
+                <input type="text" v-model="permission.name" class="form-control form-control-sm" placeholder="myapp.permission" />
+              </td>
+              <td class="align-middle">
+                <input type="text" v-model="permission.displayName" class="form-control form-control-sm" placeholder="My permission" />
+              </td>
+              <td class="align-middle">
+                <input type="text" v-model="permission.description" class="form-control form-control-sm" placeholder="Permission for my app" />
+              </td>
+              <td class="align-middle text-right">
+                <button type="button" class="btn btn-sm btn-outline-secondary" @click="client.permissions.splice(index, 1)"><i class="icon-trash-2"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- =========== -->
+
       <!-- Danger Zone -->
       <div v-if="!isNew" class="list-group alert-danger mt-3">
         <div class="list-group-item border-danger p-0" style="overflow: hidden;">
@@ -170,7 +213,8 @@ module.exports = {
           clientName: '',
           logoUri: '',
           enabled: true,
-          allowedUris: []
+          allowedUris: [],
+          permissions: []
         };
       } else {
         api.getClient(this.$route.params.id).then(client => this.client = client);

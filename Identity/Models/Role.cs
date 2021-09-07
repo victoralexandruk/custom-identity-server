@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Identity.Models
 {
@@ -9,5 +10,7 @@ namespace Identity.Models
         public string Name { get; set; }
 
         public string DisplayName { get; set; }
+
+        public IEnumerable<RolePermission> Permissions { get; set; } = new List<RolePermission>();
     }
 }

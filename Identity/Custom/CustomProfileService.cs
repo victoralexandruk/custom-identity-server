@@ -16,11 +16,13 @@ namespace Identity.Custom
     {
         protected readonly ILogger _logger;
         protected readonly UserRepository _userRepository;
+        protected readonly RoleRepository _roleRepository;
 
-        public CustomProfileService(ILogger<CustomProfileService> logger, UserRepository userRepository)
+        public CustomProfileService(ILogger<CustomProfileService> logger, UserRepository userRepository, RoleRepository roleRepository)
         {
             _logger = logger;
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
         }
 
 
@@ -43,6 +45,9 @@ namespace Identity.Custom
                 new Claim(JwtClaimTypes.Email, user.Email),
                 new Claim(JwtClaimTypes.Role, user.Role)
             };
+
+            var role = _roleRepository.FindByName(user.Role);
+            role?.Permissions?.ToList().ForEach(permission => claims.Add(new Claim(CustomClaimTypes.Permission, permission.Name)));
 
             //context.IssuedClaims = claims;
             context.IssuedClaims.AddRange(claims);

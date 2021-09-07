@@ -68,10 +68,11 @@ const api = {
     });
   },
   /* Clients ================================================================ */
-  getClients() {
+  getClients(withPermissions) {
+    withPermissions = withPermissions || false;
     return this.ajax({
       type: "GET",
-      url: `${apiUrls.admin}/client`,
+      url: `${apiUrls.admin}/client?withPermissions=${withPermissions}`,
       dataType: "json"
     });
   },

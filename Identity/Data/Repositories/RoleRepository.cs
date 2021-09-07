@@ -2,6 +2,8 @@
 using Identity.Models;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace Identity.Data.Repositories
 {
@@ -18,10 +20,12 @@ namespace Identity.Data.Repositories
             if (old == null)
             {
                 InsertSql("Role", "Id, Name, DisplayName", model);
+                UpdatePermissions(model);
             }
             else
             {
                 UpdateSql("Role", "Name, DisplayName", model, "Id = @Id");
+                UpdatePermissions(model);
             }
         }
 
@@ -37,7 +41,14 @@ namespace Identity.Data.Repositories
         {
             using (var db = GetConn())
             {
-                return db.QueryFirstOrDefault<Role>("SELECT * FROM Role WHERE Id = @id", new { id });
+                return db.Query<Role, string, Role>("SELECT * FROM Role WHERE Id = @id", (role, permissions) =>
+                {
+
+                    if (!string.IsNullOrWhiteSpace(permissions))
+                        role.Permissions = JsonSerializer.Deserialize<IEnumerable<RolePermission>>(permissions);
+
+                    return role;
+                }, new { id }, splitOn: "Permissions").FirstOrDefault();
             }
         }
 
@@ -45,7 +56,14 @@ namespace Identity.Data.Repositories
         {
             using (var db = GetConn())
             {
-                return db.QueryFirstOrDefault<Role>("SELECT * FROM Role WHERE Name = @name", new { name });
+                return db.Query<Role, string, Role>("SELECT * FROM Role WHERE Name = @name", (role, permissions) =>
+                {
+
+                    if (!string.IsNullOrWhiteSpace(permissions))
+                        role.Permissions = JsonSerializer.Deserialize<IEnumerable<RolePermission>>(permissions);
+
+                    return role;
+                }, new { name }, splitOn: "Permissions").FirstOrDefault();
             }
         }
 
@@ -53,8 +71,17 @@ namespace Identity.Data.Repositories
         {
             using (var db = GetConn())
             {
-                return db.Query<Role>("SELECT * FROM Role");
+                return db.Query<Role>("SELECT Id, Name, DisplayName FROM Role");
             }
+        }
+
+        private void UpdatePermissions(Role model)
+        {
+            UpdateSql("Role", "Permissions", new
+            {
+                Id = model.Id,
+                Permissions = JsonSerializer.Serialize(model.Permissions)
+            }, "Id = @Id");
         }
     }
 }

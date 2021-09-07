@@ -15,6 +15,8 @@ namespace Identity.Models
 
         public ICollection<string> AllowedUris { get; set; } = new List<string>();
 
+        public IEnumerable<ClientPermission> Permissions { get; set; } = new List<ClientPermission>();
+
         public Client ToIdentityClient()
         {
             var identityClient = new Client

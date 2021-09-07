@@ -19,9 +19,9 @@ namespace Identity.ControllersApi.Admin
         }
 
         [HttpGet]
-        public IEnumerable<CustomClient> GetAll()
+        public IEnumerable<CustomClient> GetAll(bool withPermissions = false)
         {
-            return _clients.GetAll();
+            return _clients.GetAll(withPermissions);
         }
 
         [HttpGet]
