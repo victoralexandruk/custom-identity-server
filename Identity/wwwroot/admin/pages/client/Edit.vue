@@ -21,7 +21,14 @@
             </tr>
             <tr>
               <th>{{$localizer('ClientId')}}</th>
-              <td><input type="text" :value="client.clientId" :placeholder="$localizer('Save to generate...')" class="form-control form-control-sm" disabled /></td>
+              <td>
+                <div class="input-group">
+                  <input type="text" :value="client.clientId" :placeholder="$localizer('Save to generate...')" class="form-control form-control-sm" disabled />
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" @click="copyToClipboard(client.clientId)" :disabled="!client.clientId"><i class="icon-copy"></i></button>
+                  </div>
+                </div>
+              </td>
             </tr>
             <tr>
               <th>{{$localizer('ClientSecret')}}</th>
@@ -29,6 +36,7 @@
                 <div class="input-group">
                   <input :type="secretType" :value="client.clientSecret" :placeholder="$localizer('Save to generate...')" class="form-control form-control-sm" disabled />
                   <div class="input-group-append">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" @click="copyToClipboard(client.clientSecret)" :disabled="!client.clientSecret"><i class="icon-copy"></i></button>
                     <button type="button" class="btn btn-sm btn-outline-secondary" @click="secretHidden = !secretHidden"><i :class="{'icon-eye-off': secretHidden, 'icon-eye': !secretHidden}"></i></button>
                   </div>
                 </div>
@@ -168,6 +176,11 @@ module.exports = {
     }
   },
   methods: {
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        this.$notyf.success(this.$localizer('Copied'));
+      });
+    },
     save() {
       api.saveClient(this.client).then(response => {
         this.$notyf.success(this.$localizer('Saved'));
